@@ -35,7 +35,7 @@ def train_test_split_by_date(X,y,division_factor):
         raise Exception("The length of the training and testing features is not the same")
     training_end_date=len(X)//division_factor
     X_train=X.iloc[:training_end_date,:]
-    y_train=X.iloc[:training_end_date,:]
+    y_train=y.iloc[:training_end_date,:]
     X_test=X.iloc[training_end_date:,:]
-    y_test=X.iloc[training_end_date:,:]
+    y_test=y.iloc[training_end_date:,:]
     return(X_train,X_test,y_train,y_test)
