@@ -5,6 +5,7 @@ import pandas as pd
 from datetime import date, timedelta
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
+from sklearn.svm import SVC
 
 def get_bars_alpaca(start_date=str(date.today()-timedelta(days=365*5)),end_date=str(date.today()-timedelta(days=1)),ticker='SOYB'):
     load_dotenv()
@@ -32,6 +33,20 @@ def make_features_targets(dataframe,close=True,volume=False,trade_count=False,vw
     y=dataframe[['close']]
     return(X,y)
 
+def cl_make_features_targets(dataframe,close=True,volume=False,trade_count=False,vwap=False):
+    if close == True:
+        dataframe['previous_close']=dataframe['close'].shift(1)
+    if volume == True:
+        dataframe['previous_volume']=dataframe['volume'].shift(1)
+    if trade_count == True:
+        dataframe['previous_trade_count']=dataframe['trade_count'].shift(1)
+    if vwap == True:
+        dataframe['vwap']=dataframe['vwap'].shift(1)
+    dataframe.dropna(inplace=True)
+    X=dataframe[dataframe.columns[dataframe.columns.str.contains('previous')]]
+    y=dataframe[['target']]
+    return(X,y)
+
 def train_test_split_by_date(X,y,division_factor):
     if len(X) != len(y):
         raise Exception("The length of the training and testing features is not the same")
@@ -51,4 +66,15 @@ def SVM_regressor(X_train,X_test,y_train,y_test):
     model.fit(X=X_train_scaled,y=y_train['close'])
     predicts=model.predict(X_test_scaled)
     predicts_df=pd.DataFrame({'close':y_test['close'],'predicted_close':predicts})
+    return(predicts_df)
+
+def SVM_classifier(X_train,X_test,y_train,y_test):
+    scaler=StandardScaler()
+    scaler.fit(X_train)
+    X_train_scaled=scaler.transform(X_train)
+    X_test_scaled=scaler.transform(X_test)
+    model=SVC()
+    model.fit(X=X_train_scaled,y=y_train['target'])
+    predicts=model.predict(X_test_scaled)
+    predicts_df=pd.DataFrame({'signal':y_test['target'],'predicted signal':predicts})
     return(predicts_df)
