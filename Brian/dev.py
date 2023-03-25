@@ -15,3 +15,17 @@ def get_bars_alpaca(start_date=str(date.today()-timedelta(days=365*5)),end_date=
     api=REST(key_id=alpaca_api_key,secret_key=secret_key)
     df=api.get_bars("SOYB", TimeFrame.Day, start_date, end_date, adjustment='raw').df
     return(df)
+
+def make_features_targets(dataframe,close=True,volume=False,trade_count=False,vwap=False):
+    if close == True:
+        df['previous_close']=df['close'].shift(1)
+    if volume == True:
+        df['previous_volume']=df['volume'].shift(1)
+    if trade_count == True:
+        df['previous_trade_count']=df['trade_count'].shift(1)
+    if vwap == True:
+        df['vwap']=df['vwap'].shift(1)
+    df.dropna(inplace=True)
+    X=df[df.columns[df.columns.str.contains('previous')]]
+    y=df['close']
+    return(X,y)
