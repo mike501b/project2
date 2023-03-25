@@ -29,3 +29,13 @@ def make_features_targets(dataframe,close=True,volume=False,trade_count=False,vw
     X=dataframe[dataframe.columns[dataframe.columns.str.contains('previous')]]
     y=dataframe['close']
     return(X,y)
+
+def train_test_split_by_date(X,y,division_factor):
+    if len(X) != len(y):
+        raise Exception("The length of the training and testing features is not the same")
+    training_end_date=len(X)//division_factor
+    X_train=X.iloc[:training_end_date,:]
+    y_train=X.iloc[:training_end_date,:]
+    X_test=X.iloc[training_end_date:,:]
+    y_test=X.iloc[training_end_date:,:]
+    return(X_train,X_test,y_train,y_test)
