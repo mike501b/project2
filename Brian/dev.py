@@ -18,14 +18,14 @@ def get_bars_alpaca(start_date=str(date.today()-timedelta(days=365*5)),end_date=
 
 def make_features_targets(dataframe,close=True,volume=False,trade_count=False,vwap=False):
     if close == True:
-        df['previous_close']=df['close'].shift(1)
+        dataframe['previous_close']=dataframe['close'].shift(1)
     if volume == True:
-        df['previous_volume']=df['volume'].shift(1)
+        dataframe['previous_volume']=dataframe['volume'].shift(1)
     if trade_count == True:
-        df['previous_trade_count']=df['trade_count'].shift(1)
+        dataframe['previous_trade_count']=dataframe['trade_count'].shift(1)
     if vwap == True:
-        df['vwap']=df['vwap'].shift(1)
-    df.dropna(inplace=True)
-    X=df[df.columns[df.columns.str.contains('previous')]]
-    y=df['close']
+        dataframe['vwap']=dataframe['vwap'].shift(1)
+    dataframe.dropna(inplace=True)
+    X=dataframe[dataframe.columns[dataframe.columns.str.contains('previous')]]
+    y=dataframe['close']
     return(X,y)
