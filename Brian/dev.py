@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from alpaca_trade_api.rest import REST, TimeFrame, TimeFrameUnit
 import pandas as pd
 from datetime import date, timedelta
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR
 
 def get_bars_alpaca(start_date=str(date.today()-timedelta(days=365*5)),end_date=str(date.today()-timedelta(days=1)),ticker='SOYB'):
     load_dotenv()
@@ -39,3 +41,14 @@ def train_test_split_by_date(X,y,division_factor):
     X_test=X.iloc[training_end_date:,:]
     y_test=y.iloc[training_end_date:,:]
     return(X_train,X_test,y_train,y_test)
+
+def SVM_regressor(X_train,X_test,y_train,y_test):
+    scaler=StandardScaler()
+    scaler.fit(X_train)
+    X_train_scaled=scaler.transform(X_train)
+    X_test_scaled=scaler.transform(X_test)
+    model=SVR()
+    model.fit(X=X_train_scaled,y=y_train['close'])
+    predicts=model.predict(X_test_scaled)
+    predicts_df=pd.DataFrame({'close':y_test['close'],'predicted_close':predicts})
+    return(predicts_df)
