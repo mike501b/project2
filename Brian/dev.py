@@ -6,6 +6,7 @@ from datetime import date, timedelta
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from sklearn.svm import SVC
+import numpy as np
 
 def get_bars_alpaca(start_date=str(date.today()-timedelta(days=365*5)),end_date=str(date.today()-timedelta(days=1)),ticker='SOYB'):
     load_dotenv()
@@ -34,6 +35,7 @@ def make_features_targets(dataframe,close=True,volume=False,trade_count=False,vw
     return(X,y)
 
 def cl_make_features_targets(dataframe,close=True,volume=False,trade_count=False,vwap=False):
+    dataframe['target'] = np.where(dataframe['open'] < dataframe['close'], 1, 0)
     if close == True:
         dataframe['previous_close']=dataframe['close'].shift(1)
     if volume == True:
