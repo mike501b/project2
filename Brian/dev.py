@@ -28,7 +28,7 @@ def make_features_targets(dataframe,close=True,volume=False,trade_count=False,vw
     if trade_count == True:
         dataframe['previous_trade_count']=dataframe['trade_count'].shift(1)
     if vwap == True:
-        dataframe['vwap']=dataframe['vwap'].shift(1)
+        dataframe['previous_vwap']=dataframe['vwap'].shift(1)
     dataframe.dropna(inplace=True)
     X=dataframe[dataframe.columns[dataframe.columns.str.contains('previous')]]
     y=dataframe[['close']]
@@ -43,7 +43,7 @@ def cl_make_features_targets(dataframe,close=True,volume=False,trade_count=False
     if trade_count == True:
         dataframe['previous_trade_count']=dataframe['trade_count'].shift(1)
     if vwap == True:
-        dataframe['vwap']=dataframe['vwap'].shift(1)
+        dataframe['previous_vwap']=dataframe['vwap'].shift(1)
     dataframe.dropna(inplace=True)
     X=dataframe[dataframe.columns[dataframe.columns.str.contains('previous')]]
     y=dataframe[['target']]
@@ -80,3 +80,9 @@ def SVM_classifier(X_train,X_test,y_train,y_test):
     predicts=model.predict(X_test_scaled)
     predicts_df=pd.DataFrame({'signal':y_test['target'],'predicted signal':predicts})
     return(predicts_df)
+
+def classify_svm(df,division_factor,close=True,volume=True,trade_count=True,vwap=True):
+    X,y=cl_make_features_targets(df,close=close,volume=volume,trade_count=trade_count,vwap=vwap)
+    X_train,X_test,y_train,y_test=train_test_split_by_date(X,y,division_factor=division_factor)
+    predictions_df=SVM_classifier(X_train,X_test,y_train,y_test)
+    return(predictions_df)
