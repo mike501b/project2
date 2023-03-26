@@ -92,3 +92,8 @@ def regressor_svm(df,division_factor,close=True,volume=True,trade_count=True,vwa
     X_train,X_test,y_train,y_test=train_test_split_by_date(X,y,division_factor=division_factor)
     predictions_df=SVM_regressor(X_train,X_test,y_train,y_test)
     return(predictions_df)
+
+def r2(y_actual,y_predicted):
+    ybar=(sum(y_actual))/len(y_actual)
+    r_squared=1-(sum((y_actual-y_predicted)**2)/sum((y_actual-ybar)**2))
+    return(r_squared)
