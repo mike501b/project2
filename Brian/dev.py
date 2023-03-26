@@ -86,3 +86,9 @@ def classify_svm(df,division_factor,close=True,volume=True,trade_count=True,vwap
     X_train,X_test,y_train,y_test=train_test_split_by_date(X,y,division_factor=division_factor)
     predictions_df=SVM_classifier(X_train,X_test,y_train,y_test)
     return(predictions_df)
+
+def regressor_svm(df,division_factor,close=True,volume=True,trade_count=True,vwap=True):
+    X,y=make_features_targets(df,close=close,volume=volume,trade_count=trade_count,vwap=vwap)
+    X_train,X_test,y_train,y_test=train_test_split_by_date(X,y,division_factor=division_factor)
+    predictions_df=SVM_regressor(X_train,X_test,y_train,y_test)
+    return(predictions_df)
