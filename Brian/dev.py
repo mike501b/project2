@@ -59,6 +59,18 @@ def train_test_split_by_date(X,y,division_factor):
     y_test=y.iloc[training_end_date:,:]
     return(X_train,X_test,y_train,y_test)
 
+def train_test_split_by_date_str(X,y):
+    if len(X) != len(y):
+        raise Exception("The length of the training and testing features is not the same")
+    training_end_date='2022-03-31'
+    test_start_date='2023-01-01'
+    test_end_date='2023-03-24'
+    X_train=X.loc['2022-01-01':training_end_date,:]
+    y_train=y.loc['2022-01-01':training_end_date,:]
+    X_test=X.loc[test_start_date:test_end_date,:]
+    y_test=y.loc[test_start_date:test_end_date,:]
+    return(X_train,X_test,y_train,y_test)
+
 def SVM_regressor(X_train,X_test,y_train,y_test):
     scaler=StandardScaler()
     scaler.fit(X_train)
@@ -87,9 +99,21 @@ def classify_svm(df,division_factor,close=True,volume=True,trade_count=True,vwap
     predictions_df=SVM_classifier(X_train,X_test,y_train,y_test)
     return(predictions_df)
 
+def classify_svm_final(df,close=True,volume=True,trade_count=True,vwap=True):
+    X,y=cl_make_features_targets(df,close=close,volume=volume,trade_count=trade_count,vwap=vwap)
+    X_train,X_test,y_train,y_test=train_test_split_by_date_str(X,y)
+    predictions_df=SVM_classifier(X_train,X_test,y_train,y_test)
+    return(predictions_df)
+
 def regressor_svm(df,division_factor,close=True,volume=True,trade_count=True,vwap=True):
     X,y=make_features_targets(df,close=close,volume=volume,trade_count=trade_count,vwap=vwap)
     X_train,X_test,y_train,y_test=train_test_split_by_date(X,y,division_factor=division_factor)
+    predictions_df=SVM_regressor(X_train,X_test,y_train,y_test)
+    return(predictions_df)
+
+def regressor_svm_final(df,close=True,volume=True,trade_count=True,vwap=True):
+    X,y=make_features_targets(df,close=close,volume=volume,trade_count=trade_count,vwap=vwap)
+    X_train,X_test,y_train,y_test=train_test_split_by_date_str(X,y)
     predictions_df=SVM_regressor(X_train,X_test,y_train,y_test)
     return(predictions_df)
 
@@ -97,3 +121,7 @@ def r2(y_actual,y_predicted):
     ybar=(sum(y_actual))/len(y_actual)
     r_squared=1-(sum((y_actual-y_predicted)**2)/sum((y_actual-ybar)**2))
     return(r_squared)
+
+def rmse(y_actual,y_predicted):
+    rmse=(sum((y_actual-y_predicted)**2)/len(y_actual))**0.5
+    return(rmse)
