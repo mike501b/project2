@@ -117,8 +117,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 ## XGBOOST Regression Model
 1. The objective parametere for the model is set to 'reg:squarederror', which emphasizes that the model is trained to minimize the mean squared error.
-
-2.The target variable y_train is continuous, which further verifies that the model is a regression model.
+2. The target variable y_train is continuous, which further verifies that the model is a regression model.
 3. The optimal hyperparameters were utilized through trial and errors and based on documented best practices for XGBOOST algorithm.
 4. The optimized model generated the best r^2 and RMSE compared to the intitial XGBOOST model. 
 
