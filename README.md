@@ -76,6 +76,28 @@ from technical import indicators
 ### Open a terminal tab and type "pip install TA-Lib". Then import talib in imports cell. Run the code from above.
 ## NOTE: Please note we had trouble running this code due to talib installs not working. Therefore, this indicator was disqualified for the signal creation process selection in this project. Nevertheless, the code will be vissible and should run if talib library runs appropriately.
 
+# Support vector machine model
+## Imports:
+from os import getenv
+from dotenv import load_dotenv
+from alpaca_trade_api.rest import REST, TimeFrame, TimeFrameUnit
+import pandas as pd
+from datetime import date, timedelta
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR
+from sklearn.svm import SVC
+import numpy as np
+
+
+## Support Vector Machine Classification Model
+1. The model trains on data from April 2021 to March 2022 including SMA signals, previous closing prices, volume, vwap, and trade counts.
+2. The model is tested on its accuracy in predicting the buy or sell signals from April 2022 to March 2023
+
+## Support Vector Machine Regression Model
+1. The model trains on data from April 2021 to March 2022 including previous closing prices, volume, vwap and trade counts.
+2. The model is tested on its ability to predict closing prices from April 2022 to March 2023
+3. A plot comparing the model's predicted closing prices to the actual closing prices is generated.
+4. R^2 and RMSE for the model are calculated.
 
 # Neural Networks
 ## Imports:
