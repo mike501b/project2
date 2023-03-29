@@ -76,3 +76,22 @@ from technical import indicators
 ### Open a terminal tab and type "pip install TA-Lib". Then import talib in imports cell. Run the code from above.
 ## NOTE: Please note we had trouble running this code due to talib installs not working. Therefore, this indicator was disqualified for the signal creation process selection in this project. Nevertheless, the code will be vissible and should run if talib library runs appropriately.
 
+
+# Neural Networks
+## Imports:
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+
+## Neural Network Classification Model
+1. The model takes features from the SMA strategy to predict the buy/sell signal. 
+2. The neural network model is trained in the "MB Classifier.ipynb" notebook with two hidden layers and one output layer.
+3. The activation function "Sigmoid" was found to produce the best results with the training data. 
+4. To use the models weights, import "nn_classifier.h5"
+
+## Neural Network Regression Model
+1. The model attempts to predict the future closing price of SOYB.
+2. The neural network model is trained in the "MB Regression.ipynb" notebook with one hidden layers and one output layer.
+3. The activation function "Linear" was found to produce the best results with the training data.
+4. To use the models weights, import "nn_regression.h5"
