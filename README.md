@@ -99,6 +99,28 @@ import numpy as np
 3. A plot comparing the model's predicted closing prices to the actual closing prices is generated.
 4. R^2 and RMSE for the model are calculated.
 
+# XGBOOST model
+## Imports:
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+import xgboost as xgb
+import matplotlib.pyplot as plt
+from sklearn.metrics import r2_score, mean_squared_error
+
+## XGBOOST Classification Model
+1. The model uses the XGBClassifier from XGBOOST library.
+2. It specifies the objective parameter as "multi:softmax", which is a common choice for classification problems.
+3. The num_class parameter is set to 3, which indicates that there are three classes in the problem.
+4. The model performed poorly according to r^2 and RMSE scores, leading us to optimize the model in the next step.
+
+## XGBOOST Regression Model
+1. The objective parametere for the model is set to 'reg:squarederror', which emphasizes that the model is trained to minimize the mean squared error.
+2. The target variable y_train is continuous, which further verifies that the model is a regression model.
+3. The optimal hyperparameters were utilized through trial and errors and based on documented best practices for XGBOOST algorithm.
+4. The optimized model generated the best r^2 and RMSE compared to the intitial XGBOOST model. 
+
 # Neural Networks
 ## Imports:
 from tensorflow.keras.models import Sequential
