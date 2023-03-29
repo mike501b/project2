@@ -34,8 +34,16 @@ def make_features_targets(dataframe,close=True,volume=False,trade_count=False,vw
     y=dataframe[['close']]
     return(X,y)
 
-def cl_make_features_targets(dataframe,close=True,volume=False,trade_count=False,vwap=False):
-    dataframe['target'] = np.where(dataframe['open'] < dataframe['close'], 1, 0)
+def cl_make_features_targets(dataframe,close=True,volume=False,trade_count=False,vwap=False, target='n'):
+    raw_df=get_bars_alpaca()
+    dataframe['volume']=raw_df['volume']
+    dataframe['trade_count']=raw_df['trade_count']
+    dataframe['vwap']=raw_df['vwap']
+    dataframe.dropna()
+    if type(target)==str:
+        dataframe['target'] = np.where(dataframe['open'] < dataframe['close'], 1, 0)
+    else:
+        dataframe['target'] = target
     if close == True:
         dataframe['previous_close']=dataframe['close'].shift(1)
     if volume == True:
@@ -44,9 +52,19 @@ def cl_make_features_targets(dataframe,close=True,volume=False,trade_count=False
         dataframe['previous_trade_count']=dataframe['trade_count'].shift(1)
     if vwap == True:
         dataframe['previous_vwap']=dataframe['vwap'].shift(1)
+    if any(dataframe.columns=='SMA50'):
+        dataframe['previous_SMA50']=dataframe['SMA50'].shift(1)
+    if any(dataframe.columns=='SMA200'):
+        dataframe['previous_SMA200']=dataframe['SMA200'].shift(1)
     dataframe.dropna(inplace=True)
+    #if any(column == 'Entry/Exit' for column in dataframe.columns):
+    #    dataframe.rename(columns={'Entry/Exit':'target'},inplace=True)
+    #if any(column == 'Entry/Exit Position' for column in dataframe.columns):
+    #    dataframe.rename(columns={'Entry/Exit Position':'target'},inplace=True)
     X=dataframe[dataframe.columns[dataframe.columns.str.contains('previous')]]
     y=dataframe[['target']]
+    X.dropna(inplace=True)
+    y.dropna(inplace=True)
     return(X,y)
 
 def train_test_split_by_date(X,y,division_factor):
@@ -62,11 +80,12 @@ def train_test_split_by_date(X,y,division_factor):
 def train_test_split_by_date_str(X,y):
     if len(X) != len(y):
         raise Exception("The length of the training and testing features is not the same")
+    training_start_date='2021-04-01'
     training_end_date='2022-03-31'
-    test_start_date='2023-01-01'
+    test_start_date='2022-04-01'
     test_end_date='2023-03-24'
-    X_train=X.loc['2022-01-01':training_end_date,:]
-    y_train=y.loc['2022-01-01':training_end_date,:]
+    X_train=X.loc[training_start_date:training_end_date,:]
+    y_train=y.loc[training_start_date:training_end_date,:]
     X_test=X.loc[test_start_date:test_end_date,:]
     y_test=y.loc[test_start_date:test_end_date,:]
     return(X_train,X_test,y_train,y_test)
@@ -99,8 +118,8 @@ def classify_svm(df,division_factor,close=True,volume=True,trade_count=True,vwap
     predictions_df=SVM_classifier(X_train,X_test,y_train,y_test)
     return(predictions_df)
 
-def classify_svm_final(df,close=True,volume=True,trade_count=True,vwap=True):
-    X,y=cl_make_features_targets(df,close=close,volume=volume,trade_count=trade_count,vwap=vwap)
+def classify_svm_final(df,close=True,volume=True,trade_count=True,vwap=True,target='n'):
+    X,y=cl_make_features_targets(df,close=close,volume=volume,trade_count=trade_count,vwap=vwap,target=target)
     X_train,X_test,y_train,y_test=train_test_split_by_date_str(X,y)
     predictions_df=SVM_classifier(X_train,X_test,y_train,y_test)
     return(predictions_df)
