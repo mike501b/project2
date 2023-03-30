@@ -2,6 +2,11 @@
 
 # SMA Signal Creation
 
+##Running the notebook:
+1.Navigate to the directory containing main_app.ipynb using the console.
+2. Ensure voila is installed using pip install voila
+3. Type voila main_app.ipynb into the console
+
 ## Imports: 
 The following imports are required to run the SMA, OBV and RSI trading strategies:
 import os
