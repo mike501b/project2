@@ -133,6 +133,8 @@ from tensorflow.keras.layers import Dense
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report
 
+import tensorflow as tf -- This is used to import the model saved in the "Mike" folder. Certain teammates couldn't import this. The model can be run in the "Mike" folder if something goes wrong with this library import.
+
 ## Neural Network Classification Model
 1. The model takes features from the SMA strategy to predict the buy/sell signal. 
 2. The neural network model is trained in the "MB Classifier.ipynb" notebook with two hidden layers and one output layer.
